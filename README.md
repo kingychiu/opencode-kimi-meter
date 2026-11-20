@@ -18,9 +18,9 @@ A local-first OpenCode V2 TUI plugin for Kimi Coding subscription usage, plan, a
 - OpenCode V2 with a Kimi Coding provider configured.
 - No global Node.js or npm installation is required for normal use; OpenCode supplies the TUI runtime.
 
-## Installation
+## Installation from npm
 
-Add `opencode-kimi-meter` to `~/.config/opencode/cli.json`, preserving any existing plugins:
+You do not need to clone this repository or run `npm install`. Add `opencode-kimi-meter` to `~/.config/opencode/cli.json`, preserving any existing plugins:
 
 ```json
 {
@@ -48,7 +48,25 @@ OpenCode retrieves the package and reloads CLI configuration automatically. Use 
 
 `KIMI_CODE_BASE_URL` overrides the default base URL when `baseUrl` is not configured. **Never put API keys in `cli.json`, plugin options, source files, issues, or test fixtures.**
 
-For the mainland China provider, set `provider` and `baseUrl` to the corresponding Kimi Coding values. No credentials are included in this repository.
+### Mainland China
+
+For the mainland China Kimi Coding provider, use `kimi-code-plan-cn` and `https://api.kimi.com/coding/v1`:
+
+```json
+{
+  "plugins": [
+    {
+      "package": "opencode-kimi-meter",
+      "options": {
+        "provider": "kimi-code-plan-cn",
+        "baseUrl": "https://api.kimi.com/coding/v1"
+      }
+    }
+  ]
+}
+```
+
+Run `opencode auth login` for that provider first so OpenCode's `auth.json` contains a `kimi-code-plan-cn` credential. No credentials are included in this repository.
 
 ## Privacy and security
 
