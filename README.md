@@ -24,13 +24,22 @@ Run `/connect` and choose **Kimi For Coding (kimi.ai)** for the global provider 
 
 ## Installation from npm
 
-You do not need to clone this repository or run `npm install`. Add `opencode-kimi-meter` to `~/.config/opencode/cli.json`, preserving any existing plugins:
+You do not need to clone this repository or run `npm install`. Install the release with OpenCode's plugin manager:
+
+```bash
+opencode plugin add opencode-kimi-meter@0.1.7
+```
+
+This adds the package to `~/.config/opencode/opencode.json`. Its TUI loads automatically; do not add it separately to `cli.json`. Use `/reload` if needed. The sidebar appears when `session.sidebar` is `auto` and terminal width permits it.
+
+To set plugin options, edit the package entry in `opencode.json`:
 
 ```json
 {
+  "$schema": "https://opencode.ai/config.json",
   "plugins": [
     {
-      "package": "opencode-kimi-meter",
+      "package": "opencode-kimi-meter@0.1.7",
       "options": {
         "refreshSeconds": 60
       }
@@ -38,8 +47,6 @@ You do not need to clone this repository or run `npm install`. Add `opencode-kim
   ]
 }
 ```
-
-OpenCode retrieves the package and reloads CLI configuration automatically. Use `/reload` if needed. The sidebar appears when `session.sidebar` is `auto` and terminal width permits it.
 
 ## Options
 
@@ -50,7 +57,7 @@ OpenCode retrieves the package and reloads CLI configuration automatically. Use 
 | `authPath` | `~/.local/share/opencode/auth.json` | Alternate credential file for testing |
 | `baseUrl` | `https://api.kimi.ai/coding/v1` | Kimi Coding API base URL |
 
-`KIMI_CODE_BASE_URL` overrides the default base URL when `baseUrl` is not configured. **Never put API keys in `cli.json`, plugin options, source files, issues, or test fixtures.**
+`KIMI_CODE_BASE_URL` overrides the default base URL when `baseUrl` is not configured. **Never put API keys in OpenCode configuration, plugin options, source files, issues, or test fixtures.**
 
 ### Mainland China
 
