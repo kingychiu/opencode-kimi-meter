@@ -1,6 +1,6 @@
 {
   "name": "opencode-kimi-meter",
-  "version": "0.1.5",
+  "version": "0.1.6",
   "description": "Kimi Coding subscription quota, plan, and model dashboard for OpenCode V2",
   "license": "MIT",
   "keywords": [
@@ -22,24 +22,25 @@
     "access": "public"
   },
   "files": [
-    "src",
+    "dist",
     "docs",
     "README.md",
     "LICENSE"
   ],
   "type": "module",
   "exports": {
-    "./tui": "./src/tui.tsx",
-    "./usage": "./src/usage.ts"
+    "./tui": "./dist/tui.js",
+    "./usage": "./dist/usage.js"
   },
   "scripts": {
+    "build": "bun build src/tui.tsx src/usage.ts --outdir dist --target bun --format esm --external @opencode/plugin/tui --external @opentui/core --external @opentui/solid --external @opentui/solid/jsx-runtime --external solid-js",
     "test": "node --import tsx --test test/*.test.ts",
     "typecheck": "tsc --noEmit",
+    "prepack": "npm run build",
     "prepublishOnly": "npm test && npm run typecheck"
   },
   "dependencies": {
-    "@opencode/plugin": "2.3.2",
-    "react": "^19.3.1"
+    "@opencode/plugin": "2.3.2"
   },
   "peerDependencies": {
     "@opentui/core": "0.9.5",
