@@ -15,7 +15,7 @@ A local-first OpenCode V2 TUI plugin for Kimi Coding subscription usage, plan, a
 
 ## Requirements
 
-- OpenCode V2 with a Kimi Coding provider configured.
+- OpenCode V2 with a Kimi Coding provider connected through `/connect`, and a model selected through `/models`.
 - No global Node.js or npm installation is required for normal use; OpenCode supplies the TUI runtime.
 
 ## Installation from npm
@@ -66,7 +66,7 @@ For the mainland China Kimi Coding provider, use `kimi-code-plan-cn` and `https:
 }
 ```
 
-Run `opencode auth login` for that provider first so OpenCode's `auth.json` contains a `kimi-code-plan-cn` credential. No credentials are included in this repository.
+Run `/connect`, choose the mainland China Kimi Coding provider, and enter its credentials. Then run `/models` to select a model. OpenCode stores the credential under `kimi-code-plan-cn`. No credentials are included in this repository.
 
 ## Privacy and security
 
