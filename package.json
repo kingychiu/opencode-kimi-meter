@@ -1,0 +1,32 @@
+{
+  "name": "opencode-kimi-meter",
+  "version": "0.1.0",
+  "description": "Kimi Coding subscription quota, plan, and model dashboard for OpenCode V2",
+  "license": "MIT",
+  "keywords": ["opencode", "kimi", "quota", "tui", "plugin"],
+  "type": "module",
+  "exports": {
+    "./tui": "./src/tui.tsx",
+    "./usage": "./src/usage.ts"
+  },
+  "scripts": {
+    "test": "node --import tsx --test test/*.test.ts",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@opencode/plugin": "2.3.2"
+  },
+  "peerDependencies": {
+    "@opentui/core": "0.9.5",
+    "@opentui/solid": "0.9.5",
+    "solid-js": ">=1.9.0"
+  },
+  "devDependencies": {
+    "@opentui/core": "0.9.5",
+    "@opentui/solid": "0.9.5",
+    "@types/node": "^24.0.0",
+    "solid-js": ">=1.9.0",
+    "tsx": "^4.20.0",
+    "typescript": "^5.9.0"
+  }
+}
