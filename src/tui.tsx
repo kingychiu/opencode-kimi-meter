@@ -1,5 +1,5 @@
 import { Plugin } from "@opencode/plugin/tui";
-import { createSignal, For, Show } from "solid-js";
+import { createSignal } from "solid-js";
 import {
   fetchKimiDashboard,
   formatContext,
@@ -12,6 +12,11 @@ import {
 
 function stringOption(value: unknown): string | undefined {
   return typeof value === "string" && value.length > 0 ? value : undefined;
+}
+
+function quotaLine(label: string, entry: KimiDashboard["usage"]["fiveHour"]): string {
+  const reset = formatReset(entry);
+  return `${label} ${formatPercent(entry)} used${reset ? ` · ${reset}` : ""}`;
 }
 
 export default Plugin.define({
@@ -94,80 +99,44 @@ export default Plugin.define({
       return `${model?.name ?? selected.modelID}${effort ? ` · ${effort}` : ""}${model ? ` · ${formatContext(model.context)}` : ""}`;
     }
 
+    // Keep every renderable mounted. OpenTUI 0.9.5 can crash when a Show
+    // fallback is replaced by a Fragment during the first usage refresh.
     const unregisterSidebar = context.ui.slot({
       append: "sidebar.content",
-      render: () => {
-        const current = dashboard();
-        return (
-          <box flexDirection="column">
-            <text fg={context.theme.text.base}>Kimi{current?.profile?.plan ? ` ${current.profile.plan}` : ""}</text>
-            <Show when={current} fallback={<text fg={context.theme.text.base}>{loading() ? "Loading…" : "Unavailable"}</text>}>
-              {(value) => (
-                <>
-                  <text fg={context.theme.text.base}>
-                    5h {formatPercent(value().usage.fiveHour)} used
-                    {formatReset(value().usage.fiveHour) ? ` · ${formatReset(value().usage.fiveHour)}` : ""}
-                  </text>
-                  <text fg={context.theme.text.base}>
-                    Month {formatPercent(value().usage.month)} used
-                    {formatReset(value().usage.month) ? ` · ${formatReset(value().usage.month)}` : ""}
-                  </text>
-                  <text fg={context.theme.text.base}>{currentModel()}</text>
-                  <Show when={value().usage.extraUsage}>
-                    {(extra) => <text fg={context.theme.text.base}>Extra {formatMoney(extra().balanceCents, extra().currency)}</text>}
-                  </Show>
-                </>
-              )}
-            </Show>
-            <Show when={error() && current}><text fg={context.theme.text.base}>Refresh failed</text></Show>
-          </box>
-        );
-      },
+      render: () => (
+        <box flexDirection="column">
+          <text fg={context.theme.text.base}>{`Kimi${dashboard()?.profile?.plan ? ` ${dashboard()?.profile?.plan}` : ""}`}</text>
+          <text fg={context.theme.text.base}>{dashboard() ? quotaLine("5h", dashboard()?.usage.fiveHour) : loading() ? "Loading…" : "Unavailable"}</text>
+          <text fg={context.theme.text.base}>{dashboard() ? quotaLine("Month", dashboard()?.usage.month) : ""}</text>
+          <text fg={context.theme.text.base}>{dashboard() ? currentModel() : ""}</text>
+          <text fg={context.theme.text.base}>{error() && dashboard() ? "Refresh failed" : ""}</text>
+        </box>
+      ),
     });
 
     const unregisterPanel = context.ui.slot({
       append: "session.panel",
-      render: (panel) => (
-        <Show when={panel.name === "kimi.meter.dashboard"}>
+      render: (panel) => {
+        if (panel.name !== "kimi.meter.dashboard") return null;
+        const current = dashboard();
+        const extra = current?.usage.extraUsage;
+        const models = current?.models ?? [];
+        return (
           <box flexDirection="column">
             <text fg={context.theme.text.base}>Kimi meter</text>
-            <Show when={dashboard()} fallback={<text fg={context.theme.text.base}>{loading() ? "Loading…" : (error() ?? "Unavailable")}</text>}>
-              {(value) => (
-                <>
-                  <text fg={context.theme.text.base}>
-                    {value().profile?.plan ?? "Kimi"}{formatRegion(value().profile?.region) ? ` · ${formatRegion(value().profile?.region)}` : ""}
-                  </text>
-                  <text fg={context.theme.text.base}>Current: {currentModel()}</text>
-                  <text fg={context.theme.text.base}>5-hour: {formatPercent(value().usage.fiveHour)} used · reset {formatReset(value().usage.fiveHour) || "—"}</text>
-                  <Show when={value().usage.week}>
-                    {(week) => <text fg={context.theme.text.base}>7-day: {formatPercent(week())} used · reset {formatReset(week()) || "—"}</text>}
-                  </Show>
-                  <text fg={context.theme.text.base}>Monthly coding: {formatPercent(value().usage.month)} used · reset {formatReset(value().usage.month) || "—"}</text>
-                  <Show when={value().usage.monthTotal}>
-                    {(month) => <text fg={context.theme.text.base}>Monthly total: {formatPercent(month())} used · reset {formatReset(month()) || "—"}</text>}
-                  </Show>
-                  <Show when={value().usage.extraUsage}>
-                    {(extra) => (
-                      <text fg={context.theme.text.base}>
-                        Extra Usage: {formatMoney(extra().balanceCents, extra().currency)} available · {formatMoney(extra().monthlyUsedCents, extra().currency)} used this month
-                      </text>
-                    )}
-                  </Show>
-                  <text fg={context.theme.text.base}>Models ({value().models.length})</text>
-                  <For each={value().models}>
-                    {(model) => (
-                      <text fg={context.theme.text.base}>
-                        {model.name} · {formatContext(model.context)}{model.efforts.length ? ` · ${model.efforts.join("/")}` : ""}
-                      </text>
-                    )}
-                  </For>
-                  <text fg={context.theme.text.base}>/kimi-refresh to refresh</text>
-                </>
-              )}
-            </Show>
+            <text fg={context.theme.text.base}>{current ? `${current.profile?.plan ?? "Kimi"}${formatRegion(current.profile?.region) ? ` · ${formatRegion(current.profile?.region)}` : ""}` : loading() ? "Loading…" : error() ?? "Unavailable"}</text>
+            <text fg={context.theme.text.base}>{current ? `Current: ${currentModel()}` : ""}</text>
+            <text fg={context.theme.text.base}>{current ? `${quotaLine("5-hour:", current.usage.fiveHour)}${formatReset(current.usage.fiveHour) ? "" : " · reset —"}` : ""}</text>
+            <text fg={context.theme.text.base}>{current?.usage.week ? `${quotaLine("7-day:", current.usage.week)}${formatReset(current.usage.week) ? "" : " · reset —"}` : ""}</text>
+            <text fg={context.theme.text.base}>{current ? `${quotaLine("Monthly coding:", current.usage.month)}${formatReset(current.usage.month) ? "" : " · reset —"}` : ""}</text>
+            <text fg={context.theme.text.base}>{current?.usage.monthTotal ? `${quotaLine("Monthly total:", current.usage.monthTotal)}${formatReset(current.usage.monthTotal) ? "" : " · reset —"}` : ""}</text>
+            <text fg={context.theme.text.base}>{extra ? `Extra Usage: ${formatMoney(extra.balanceCents, extra.currency)} available · ${formatMoney(extra.monthlyUsedCents, extra.currency)} used this month` : ""}</text>
+            <text fg={context.theme.text.base}>{current ? `Models (${models.length})` : ""}</text>
+            <text fg={context.theme.text.base}>{models.map((model) => `${model.name} · ${formatContext(model.context)}${model.efforts.length ? ` · ${model.efforts.join("/")}` : ""}`).join("\n")}</text>
+            <text fg={context.theme.text.base}>{current ? "/kimi-refresh to refresh" : ""}</text>
           </box>
-        </Show>
-      ),
+        );
+      },
     });
 
     return () => {
