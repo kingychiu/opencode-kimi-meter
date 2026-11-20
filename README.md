@@ -18,6 +18,10 @@ A local-first OpenCode V2 TUI plugin for Kimi Coding subscription usage, plan, a
 - OpenCode V2 with a Kimi Coding provider connected through `/connect`, and a model selected through `/models`.
 - No global Node.js or npm installation is required for normal use; OpenCode supplies the TUI runtime.
 
+Run `/connect` and choose **Kimi For Coding (kimi.ai)** for the global provider or **Kimi For Coding (kimi.com)** for mainland China. Enter your API key, then run `/models` to select a model.
+
+![OpenCode connect integration picker showing Kimi For Coding options for kimi.ai and kimi.com](docs/kimi-connect.png)
+
 ## Installation from npm
 
 You do not need to clone this repository or run `npm install`. Add `opencode-kimi-meter` to `~/.config/opencode/cli.json`, preserving any existing plugins:
