@@ -1,6 +1,6 @@
 {
   "name": "opencode-kimi-meter",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "Kimi Coding subscription quota, plan, and model dashboard for OpenCode V2",
   "license": "MIT",
   "keywords": [
