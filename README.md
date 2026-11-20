@@ -2,6 +2,8 @@
 
 A local-first OpenCode V2 TUI plugin for Kimi Coding subscription usage, plan, and model information.
 
+![OpenCode Kimi Meter sidebar showing the Kimi Max plan, 5-hour and monthly quota usage, reset times, and the selected K3.1 Pro model](docs/kimi-meter-sidebar.png)
+
 ## Features
 
 - Compact sidebar with 5-hour and monthly usage, reset durations, and current model.
@@ -14,25 +16,17 @@ A local-first OpenCode V2 TUI plugin for Kimi Coding subscription usage, plan, a
 ## Requirements
 
 - OpenCode V2 with a Kimi Coding provider configured.
-- Node.js 26.4 or later is recommended for development. OpenCode supplies its own TUI runtime.
+- No global Node.js or npm installation is required for normal use; OpenCode supplies the TUI runtime.
 
-## Local installation
+## Installation
 
-```bash
-git clone <your-repository-url>
-cd opencode-kimi-meter
-npm install
-npm test
-npm run typecheck
-```
-
-Add the package to `~/.config/opencode/cli.json`, preserving existing plugins and replacing the example path:
+Add `opencode-kimi-meter` to `~/.config/opencode/cli.json`, preserving any existing plugins:
 
 ```json
 {
   "plugins": [
     {
-      "package": "/absolute/path/to/opencode-kimi-meter",
+      "package": "opencode-kimi-meter",
       "options": {
         "refreshSeconds": 60
       }
@@ -41,7 +35,7 @@ Add the package to `~/.config/opencode/cli.json`, preserving existing plugins an
 }
 ```
 
-OpenCode reloads CLI configuration automatically. Use `/reload` if needed. The sidebar appears when `session.sidebar` is `auto` and terminal width permits it.
+OpenCode retrieves the package and reloads CLI configuration automatically. Use `/reload` if needed. The sidebar appears when `session.sidebar` is `auto` and terminal width permits it.
 
 ## Options
 
@@ -68,12 +62,36 @@ It never writes or logs credentials, modifies OpenCode credentials, sends analyt
 
 ## Development
 
+Node.js 26.4 or later is recommended for development.
+
 ```bash
+git clone https://github.com/kingychiu/opencode-kimi-meter.git
+cd opencode-kimi-meter
+npm install
 npm test
 npm run typecheck
 ```
 
+For a local checkout, configure the plugin with an absolute package path:
+
+```json
+{
+  "plugins": [
+    {
+      "package": "/absolute/path/to/opencode-kimi-meter",
+      "options": {
+        "refreshSeconds": 60
+      }
+    }
+  ]
+}
+```
+
 The implementation follows Kimi Code's official managed-usage client (`packages/oauth/src/managed-usage.ts`, `managed-userinfo.ts`, and `managed-kimi-code.ts` in `MoonshotAI/kimi-code`) and OpenCode V2's `sidebar.content` and `session.panel` plugin slots.
+
+## Publishing
+
+Maintainers can follow [`PUBLISHING.md`](PUBLISHING.md) for release checks and npm publishing.
 
 ## License
 

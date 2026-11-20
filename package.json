@@ -3,7 +3,30 @@
   "version": "0.1.0",
   "description": "Kimi Coding subscription quota, plan, and model dashboard for OpenCode V2",
   "license": "MIT",
-  "keywords": ["opencode", "kimi", "quota", "tui", "plugin"],
+  "keywords": [
+    "opencode",
+    "kimi",
+    "quota",
+    "tui",
+    "plugin"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kingychiu/opencode-kimi-meter.git"
+  },
+  "homepage": "https://github.com/kingychiu/opencode-kimi-meter#readme",
+  "bugs": {
+    "url": "https://github.com/kingychiu/opencode-kimi-meter/issues"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "files": [
+    "src",
+    "docs",
+    "README.md",
+    "LICENSE"
+  ],
   "type": "module",
   "exports": {
     "./tui": "./src/tui.tsx",
@@ -11,7 +34,8 @@
   },
   "scripts": {
     "test": "node --import tsx --test test/*.test.ts",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "prepublishOnly": "npm test && npm run typecheck"
   },
   "dependencies": {
     "@opencode/plugin": "2.3.2"
