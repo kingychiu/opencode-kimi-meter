@@ -38,7 +38,8 @@
     "prepublishOnly": "npm test && npm run typecheck"
   },
   "dependencies": {
-    "@opencode/plugin": "2.3.2"
+    "@opencode/plugin": "2.3.2",
+    "react": "^19.3.1"
   },
   "peerDependencies": {
     "@opentui/core": "0.9.5",
