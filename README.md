@@ -89,10 +89,6 @@ For a local checkout, configure the plugin with an absolute package path:
 
 The implementation follows Kimi Code's official managed-usage client (`packages/oauth/src/managed-usage.ts`, `managed-userinfo.ts`, and `managed-kimi-code.ts` in `MoonshotAI/kimi-code`) and OpenCode V2's `sidebar.content` and `session.panel` plugin slots.
 
-## Publishing
-
-Maintainers can follow [`PUBLISHING.md`](PUBLISHING.md) for release checks and npm publishing.
-
 ## License
 
 MIT
